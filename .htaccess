@@ -1,0 +1,11 @@
+AddType image/x-icon .ico 
+RewriteEngine on 
+
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+
+AddDefaultCharset UTF-8
+php_flag magic_quotes_gpc Off
