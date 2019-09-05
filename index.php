@@ -1,8 +1,11 @@
 <?php
 define('ROOT', __DIR__);
 include './config.php';
+include './chromephp-master/ChromePhp.php';
 // $src = fopen('log.txt', 'w');
 // fputs($src,ROOT);
+
+
 
 $router = new Lib_Application();
 $member = $router->Run();

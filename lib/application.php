@@ -25,9 +25,6 @@ class Lib_Application
 
         }
 
-
-
-
         return $target;
 
     }
@@ -48,7 +45,7 @@ class Lib_Application
         $view = 'app/views/'.$this->getRoute().'.php';
 
 
-        
+
 
         return $view;
 
@@ -65,8 +62,7 @@ class Lib_Application
         $controller=$this->getController();
         $cl=explode('.', $controller);
 
-//        $src = fopen('log.txt', 'w');
-//        fputs($src,$controller);
+
         $cl=$cl[0];
 
         $name_contr=str_replace("/", "_", $cl);

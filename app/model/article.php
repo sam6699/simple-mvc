@@ -8,7 +8,7 @@ class App_Model_Article extends Lib_Base{
      */
     public function __construct()
     {
-        parent::setTable('post');
+        parent::setTable('posts');
 
 
     }
@@ -16,6 +16,19 @@ class App_Model_Article extends Lib_Base{
     public function add($title,$text,$img){
 
        return parent::add($title,$text,$img);
+
+
+    }
+
+    public function delete($id){
+
+        parent::delete($id);
+
+
+    }
+
+    public function get($id){
+        parent::get($id);
 
 
     }

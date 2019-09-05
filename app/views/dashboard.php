@@ -1,11 +1,9 @@
 <?php
-if (isset($upload)){
-    print_r($upload);
+if (isset($isDeleted)){
+    print_r($isDeleted);
 }
-if (isset($txt)){
-    print_r($txt);
 
-}
+
 
 ?>
 
@@ -19,7 +17,7 @@ if (isset($txt)){
                 <div class="image-upload-wrap">
                     <input name="img" class="file-upload-input" type="file" id="file" onchange="readURL(this);" accept="image/*" />
                     <div class="drag-text">
-                        <h3>Drag and drop a file or select add Image</h3>
+                        <h3>Выбрать изображение</h3>
                     </div>
                 </div>
                 <div class="file-upload-content">
@@ -29,12 +27,12 @@ if (isset($txt)){
                     </div>
                 </div>
             </div>
-            <input type="text" class="form-control" value="Оглавление" name="title">
+            <input type="text" class="form form-control-sm" placeholder="Оглавление" name="title" style="margin:10px 11px;width: 87.4%;text-align: center">
             <div class="content-text">
-                <textarea name="text" id="" cols="110" rows="8" placeholder="Текст статьи" style="padding-top: 10px;text-align: center;"></textarea>
+                <textarea class="form form-control-sm" name="text" id="" cols="110" rows="5" placeholder="Текст статьи" style="padding-top: 10px;text-align: center;"></textarea>
             </div>
-            <div style="text-align: center">
-            <input type="submit" class="btn-sm btn-success">
+            <div style="padding:5px 10px">
+            <input type="submit" class="btn-sm btn-success" value="Добавить">
 
             </div>
         </form>
@@ -49,15 +47,15 @@ if (isset($txt)){
         <ul class="articles-list">
             <?php foreach ($dash_articles as $row){?>
 
-                <li >
+                <li id="<?php echo $row['id']?>">
                     <div class="list-item">
                         <img src="/uploads/<?php echo $row['image']?>" alt="" class="item-img">
 
                         <div class="item-title" >
                         <span><?php echo $row['title']?></span>
                         <div class="btn-container" >
-                            <button class="my-btn" style="background-color: #17a2b8">Редактировать</button>
-                            <button class="my-btn" style="background-color: #c82333">Удалить</button>
+                            <button class="my-btn" style="background-color: #17a2b8" onclick="edit(<?php echo $row['id']?>)">Редактировать</button>
+                            <button class="my-btn" style="background-color: #c82333" onclick="rem(<?php echo $row['id']?>)">Удалить</button>
                         </div>
                         </div>
                     </div>
@@ -105,5 +103,41 @@ if (isset($txt)){
         $('.image-upload-wrap').removeClass('image-dropping');
     });
 
+     async function rem(id) {
+        console.log(id);
 
+
+         let item = document.getElementById(id);
+
+         item.parentNode.removeChild(item);
+         console.log(item);
+
+            let formData = new FormData();
+            formData.append('del_id',id);
+
+         await fetch("dashboard",{
+             method:'POST',
+             body:formData
+
+         })
+
+
+        }
+        async function edit(id) {
+         let formData = new FormData();
+         formData.append('get_id',id);
+
+
+         await fetch("dashboard",{
+             method:'POST',
+             body:formData
+
+         })
+             .then((res)=> res.json())
+             .then((data)=>{
+                console.log(data);
+             })
+             .catch((error)=>console.log(error));
+
+     }
 </script>
