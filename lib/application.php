@@ -39,13 +39,14 @@ class Lib_Application
     }
 
     public function getView(){
-        $route = $this->getController();
 
+        if (isset($_POST['get_id'])){
+        $view = 'app/views/article.php';
 
+        }else{
         $view = 'app/views/'.$this->getRoute().'.php';
 
-
-
+        }
 
         return $view;
 

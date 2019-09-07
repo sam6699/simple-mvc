@@ -1,39 +1,35 @@
 <?php
-if (isset($isDeleted)){
-    print_r($isDeleted);
-}
-
 
 
 ?>
-
 <div class="admin-dashboard">
     <div class="admin-dashboard-header">
         1
     </div>
     <div class="admin-dashboard-form">
         <form enctype="multipart/form-data" action="dashboard" method="post">
+            <input type="hidden" name="update_id" id="id">
                         <div class="file-upload">
-                <div class="image-upload-wrap">
+                <div class="image-upload-wrap" id="image-wrap">
                     <input name="img" class="file-upload-input" type="file" id="file" onchange="readURL(this);" accept="image/*" />
                     <div class="drag-text">
                         <h3>Выбрать изображение</h3>
                     </div>
                 </div>
-                <div class="file-upload-content">
+                <div class="file-upload-content" id="file-upload">
                     <img class="file-upload-image" src="#" alt="your image"/>
                     <div class="image-title-wrap">
                         <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
                     </div>
                 </div>
             </div>
-            <input type="text" class="form form-control-sm" placeholder="Оглавление" name="title" style="margin:10px 11px;width: 87.4%;text-align: center">
+            <input type="text" class="form form-control-sm" placeholder="Оглавление" name="title" style="margin:10px 11px;width: 87.4%;text-align: center" id="title">
             <div class="content-text">
-                <textarea class="form form-control-sm" name="text" id="" cols="110" rows="5" placeholder="Текст статьи" style="padding-top: 10px;text-align: center;"></textarea>
+                <textarea class="form form-control-sm" name="text" id="txt" cols="110" rows="5" placeholder="Текст статьи" style="padding-top: 10px;text-align: center;"></textarea>
             </div>
             <div style="padding:5px 10px">
-            <input type="submit" class="btn-sm btn-success" value="Добавить">
-
+            <input type="submit" id="add" class="btn-sm btn-success" value="Добавить" >
+                <input type="submit" id="edit" class="btn-sm" value="Изменить" disabled>
             </div>
         </form>
 
@@ -69,48 +65,14 @@ if (isset($isDeleted)){
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
-
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
-
-                $('.image-title').html(input.files[0].name);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-
-        } else {
-            removeUpload();
-        }
-    }
-
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
-    }
-    $('.image-upload-wrap').bind('dragover', function () {
-        $('.image-upload-wrap').addClass('image-dropping');
-    });
-    $('.image-upload-wrap').bind('dragleave', function () {
-        $('.image-upload-wrap').removeClass('image-dropping');
-    });
-
-     async function rem(id) {
-        console.log(id);
+<script type="text/javascript" charset="utf-8">
+        async function rem(id) {
 
 
          let item = document.getElementById(id);
 
          item.parentNode.removeChild(item);
-         console.log(item);
+         // console.log(item);
 
             let formData = new FormData();
             formData.append('del_id',id);
@@ -119,7 +81,7 @@ if (isset($isDeleted)){
              method:'POST',
              body:formData
 
-         })
+         }).catch((error)=>console.log(error));
 
 
         }
@@ -130,14 +92,78 @@ if (isset($isDeleted)){
 
          await fetch("dashboard",{
              method:'POST',
-             body:formData
+             body:formData,
 
          })
-             .then((res)=> res.json())
-             .then((data)=>{
-                console.log(data);
+             .then((res)=>{
+                 return res.json();
              })
+             .then((data)=>readAjax(data))
              .catch((error)=>console.log(error));
 
      }
+
+
+        $('#update_id').val("");
+
+
+       function readAjax(input) {
+         return new Promise(function (resolve,reject) {
+             console.log('worked');
+                 $('.image-upload-wrap').hide();
+                 $('.file-upload-image').attr('src','/uploads/'+input[0]['image']);
+                 $('.file-upload-content').show();
+                 $('#title').val(input[0]['title']);
+                 $('#txt').val(input[0]['post'])
+                 $('#add').attr('disabled','disabled');
+                 $('#add').removeClass('btn-success');
+                 $('#edit').attr('class','btn-sm btn-success');
+                 $('#edit').removeAttr('disabled');
+                 $('#id').val(input[0]['id']);
+
+         });
+
+       }
+
+
+       function readURL(input) {
+
+              if (input.files && input.files[0]) {
+
+                 var reader = new FileReader();
+
+                 reader.onload = function(e) {
+                     $('.image-upload-wrap').hide();
+
+                     $('.file-upload-image').attr('src', e.target.result);
+                     $('.file-upload-content').show();
+
+                     if (input.files)
+                         $('.image-title').html(input.files[0].name);
+                     else $('.image-title').html(input[0]['image']);
+
+                 };
+
+                 reader.readAsDataURL(input.files[0]);
+
+
+             } else {
+                 removeUpload();
+             }
+
+
+     }
+
+     function removeUpload() {
+         $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+         $('.file-upload-content').hide();
+         $('.image-upload-wrap').show();
+     }
+     $('.image-upload-wrap').bind('dragover', function () {
+         $('.image-upload-wrap').addClass('image-dropping');
+     });
+     $('.image-upload-wrap').bind('dragleave', function () {
+         $('.image-upload-wrap').removeClass('image-dropping');
+     });
+
 </script>

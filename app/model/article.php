@@ -13,10 +13,15 @@ class App_Model_Article extends Lib_Base{
 
     }
 
-    public function add($title,$text,$img){
+    public function add($title,$text,$img=null){
 
        return parent::add($title,$text,$img);
 
+
+    }
+
+    public function update($id,$list){
+        parent::update($id,$list);
 
     }
 
@@ -28,7 +33,7 @@ class App_Model_Article extends Lib_Base{
     }
 
     public function get($id){
-        parent::get($id);
+       return parent::get($id);
 
 
     }

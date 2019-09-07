@@ -22,11 +22,14 @@ class Lib_Base {
     }
 
     public function add($title,$text,$img){
+
         $conn = Lib_Connector::getInstance();
         $stmt = $conn->getConnection()->prepare("INSERT INTO ".$this->table." (post,title,image) values (:text,:title,:img)");
         $stmt->bindParam(':text',$text);
         $stmt->bindParam(':title',$title);
         $stmt->bindParam(':img',$img);
+
+
 
         $stmt->execute();
 
@@ -50,8 +53,9 @@ class Lib_Base {
         $stmt = $conn->getConnection()->prepare("SELECT * FROM ".$this->table." WHERE id=:id");
         $stmt->bindParam(":id",$id);
         $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        return $stmt->fetchAll();
+//        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res;
 
 
     }
@@ -69,7 +73,28 @@ class Lib_Base {
         $this->table = $table;
     }
 
+    public function update($id,$list){
+        $conn = Lib_Connector::getInstance();
+        $sql="UPDATE ".$this->table." set ";
 
+        foreach ($list as $name=>$value){
+            $sql.=$name."=:".$name.",";
+
+
+        }
+
+        $sql=substr($sql,0,-1);
+
+        $sql.=" WHERE id=:id";
+
+        ChromePhp::log($sql);
+        $stmt = $conn->getConnection()->prepare($sql);
+
+        $list['id']=$id;
+        $stmt->execute($list);
+
+
+    }
 
 
 }
