@@ -8,6 +8,17 @@
 
 class Lib_Application
 {
+    private $art;
+
+    /**
+     * Lib_Application constructor.
+     * @param $art
+     */
+    public function __construct()
+    {
+        $this->art = new App_Model_Article();
+    }
+
 
     private function getRoute(){
 
@@ -16,14 +27,27 @@ class Lib_Application
 
             $route=$_GET['route'];
 
+//            ChromePhp::log($_GET['route']);
+
             $route = explode('/',$route);
 
             $size = count($route);
 
             $target = $route[$size-1];
+            $res = $this->art->get($target);
+
+            if (!empty($res)){
+                $_REQUEST['art_id']=$target;
+                $target='article';
+            }
+
 
 
         }
+
+
+
+
 
         return $target;
 
@@ -34,19 +58,22 @@ class Lib_Application
 
         $path_controller = 'app/controllers/'.$route.'.php';
 
+
         return $path_controller;
 
     }
 
     public function getView(){
+//
+//        if (isset($_POST['get_id'])){
+//        $view = 'app/views/article.php';
+//
+//        }else{
+//
 
-        if (isset($_POST['get_id'])){
-        $view = 'app/views/article.php';
+            $view = 'app/views/'.$this->getRoute().'.php';
 
-        }else{
-        $view = 'app/views/'.$this->getRoute().'.php';
 
-        }
 
         return $view;
 
@@ -56,8 +83,7 @@ class Lib_Application
 
     public function Run(){
         session_start();
-
-
+        $_SESSION['user']='';
 
 
         $controller=$this->getController();
@@ -67,6 +93,8 @@ class Lib_Application
         $cl=$cl[0];
 
         $name_contr=str_replace("/", "_", $cl);
+
+
         $contr=new $name_contr;
         $contr->index();
 

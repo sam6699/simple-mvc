@@ -1,17 +1,22 @@
 <?php
 
 class App_Controllers_Article extends Lib_Controller{
+private $model;
+
+    public function __construct()
+    {
+        $this->model = new App_Model_Article();
+    }
+
 
     public function index()
     {
+            if (isset($_REQUEST['art_id'])){
+                $this->row=$this->model->get($_REQUEST['art_id']);
 
-        if (isset($_REQUEST['img'])){
-//                $model = new App_Model_Article();
-            $img =$_REQUEST['img'];
-            $src = fopen('log.txt','w');
-        }
-            fputs($src,'testttererer111111');
-            $this->name= $_FILES['img']['name'];
+
+
+            }
 
 
     }

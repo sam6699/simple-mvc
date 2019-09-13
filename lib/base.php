@@ -50,7 +50,9 @@ class Lib_Base {
 
     public function get($id){
         $conn = Lib_Connector::getInstance();
-        $stmt = $conn->getConnection()->prepare("SELECT * FROM ".$this->table." WHERE id=:id");
+        $sql = "SELECT * FROM ".$this->table." WHERE id=:id";
+        ChromePhp::log(gettype($id));
+        $stmt = $conn->getConnection()->prepare($sql);
         $stmt->bindParam(":id",$id);
         $stmt->execute();
 //        $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -59,6 +61,8 @@ class Lib_Base {
 
 
     }
+
+
 
     public function getTable()
     {
@@ -93,6 +97,21 @@ class Lib_Base {
         $list['id']=$id;
         $stmt->execute($list);
 
+
+    }
+
+
+    public function check($email,$pass){
+        $conn = Lib_Connector::getInstance();
+        $sql = "SELECT * FROM users where email=:mail and password = :pass";
+        $stmt = $conn->getConnection()->prepare($sql);
+
+        $stmt->bindParam(":mail",$email);
+        $stmt->bindParam(":pass",$pass);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
 
     }
 

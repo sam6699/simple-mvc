@@ -23,7 +23,11 @@
     <script src="/js/jquery-3.4.1.min.js"></script>
 </head>
 <body>
-<?php include ($router->getView());?>
+<?php
+include ($router->getView());
+
+
+?>
 
 
 <div class="footer" id="foo">

@@ -2,9 +2,6 @@
 define('ROOT', __DIR__);
 include './config.php';
 include './chromephp-master/ChromePhp.php';
-// $src = fopen('log.txt', 'w');
-// fputs($src,ROOT);
-
 
 
 $router = new Lib_Application();
@@ -20,5 +17,9 @@ if(isset($member)) //если контролер вернул какието п�
 
     }
 
-require_once './public/index.php';
+if (isset($_POST['get_id'])||isset($_POST['is_auth'])){
+    require_once './ajax/ajax.php';
+}else{
+    require_once './public/index.php';
+}
 
